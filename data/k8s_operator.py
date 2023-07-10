@@ -30,16 +30,17 @@ volume_config = V1Volume(
     persistent_volume_claim=V1PersistentVolumeClaimVolumeSource(claim_name='airflow-pvc')
 )
 
-tasks = ["preprocess_data", "train_model", "test_model", "deploy_model"]
+task_names = ["preprocess_data", "train_model", "test_model", "deploy_model"]
+tasks = []
 
-for i, task in enumerate(tasks):
+for i, task_name in enumerate(task_names):
     task = KubernetesPodOperator(
         namespace='default',
         image="python:3.8",
         cmds=["python3"],
-        arguments=[f"/home/env/airflow/dags_pvc/{task}.py"],
-        name=task,
-        task_id=task,
+        arguments=[f"/home/env/airflow/dags_pvc/{task_name}.py"],
+        name=task_name,
+        task_id=task_name,
         volumes=[volume_config],
         volume_mounts=[volume_mount],
         is_delete_operator_pod=True,
@@ -47,6 +48,8 @@ for i, task in enumerate(tasks):
         config_file='/path/to/kubeconfig',
         dag=dag,
     )
-
+    
+    tasks.append(task)
+    
     if i != 0:
         tasks[i-1] >> task
