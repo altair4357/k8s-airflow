@@ -12,7 +12,7 @@ default_args = {
 }
 
 dag = DAG(
-    'ml_pipeline',
+    'k8s_operator',
     default_args=default_args,
     description='A simple ML pipeline',
     schedule_interval=timedelta(days=1),
