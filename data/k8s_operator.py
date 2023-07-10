@@ -45,9 +45,10 @@ for i, task_name in enumerate(task_names):
         volume_mounts=[volume_mount],
         is_delete_operator_pod=True,
         in_cluster=True,
-        config_file='/path/to/kubeconfig',
+        config_file='/mnt/c/Users/altai/.kube/config',
         dag=dag,
     )
+
     
     tasks.append(task)
     
