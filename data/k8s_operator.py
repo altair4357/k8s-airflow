@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from kubernetes.client import V1VolumeMount, V1PersistentVolumeClaimVolumeSource, V1Volume
 
 default_args = {
     'owner': 'airflow',
@@ -19,17 +20,15 @@ dag = DAG(
     start_date=datetime(2023, 7, 5),
 )
 
-volume_config = {
-    'name': 'data-volume',
-    'persistentVolumeClaim': {
-        'claimName': 'airflow-pvc'
-    },
-}
+volume_mount = V1VolumeMount(
+    mount_path='/home/env/airflow/dags_pvc',
+    name='data-volume',
+)
 
-volume_mount = {
-    'mountPath': '/home/env/airflow/dags_pvc',
-    'name': 'data-volume',
-}
+volume_config = V1Volume(
+    name='data-volume',
+    persistent_volume_claim=V1PersistentVolumeClaimVolumeSource(claim_name='airflow-pvc')
+)
 
 tasks = ["preprocess_data", "train_model", "test_model", "deploy_model"]
 
