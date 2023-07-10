@@ -24,7 +24,7 @@ gitSync:
     gid: 65533
 
   repo: https://github.com/altair4357/MLOps_airflow.git
-  repoSubPath: dags
+  #repoSubPath: dags
   branch: main
   revision: HEAD
   depth: 1
