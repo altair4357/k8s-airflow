@@ -31,5 +31,5 @@ gitSync:
   syncWait: 60
   syncTimeout: 120
   httpSecret: "airflow-secrets"
-  httpSecretUsernameKey: SmVvbmdIbyBLaW0=
-  httpSecretPasswordKey: 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
+  httpSecretUsernameKey: <Base64 encoded Username value>
+  httpSecretPasswordKey: <Base64 encoded Token key value>
