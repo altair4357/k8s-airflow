@@ -1,6 +1,6 @@
 # 2023.07.11 14:30
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from kubernetes.client import V1VolumeMount, V1PersistentVolumeClaimVolumeSource, V1Volume
@@ -18,6 +18,7 @@ dag = DAG(
     'k8s_operator',
     default_args=default_args,
     description='A simple ML pipeline',
+    start_date=datetime(2023, 7, 11, 14, 30),  # 시작 날짜 설정
     schedule_interval=None,
 )
 
