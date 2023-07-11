@@ -1,4 +1,4 @@
-# 2023.07.11 13:00
+# 2023.07.11 14:30
 
 from datetime import datetime
 from airflow import DAG
@@ -40,7 +40,7 @@ def test_model():
 # Using a DAG context manager, you don't have to specify the dag property of each task
 with DAG('machine_learning_workflow',
          description='A simple ml workflow',
-         schedule_interval='0 12 * * *',
+         schedule_interval=None,
          start_date=datetime(2023, 7, 11), catchup=False) as dag:
     
     preprocess_data_task = PythonOperator(
@@ -61,3 +61,4 @@ with DAG('machine_learning_workflow',
 
     # Define task dependencies
     preprocess_data_task >> train_model_task >> deploy_model_task >> test_model_task
+
