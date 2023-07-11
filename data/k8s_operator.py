@@ -38,7 +38,7 @@ for i, task_name in enumerate(task_names):
         namespace='default',
         image="python:3.8",
         cmds=["python3"],
-        arguments=[f"/home/env/airflow/dags_pvc/{task_name}.py"],
+        arguments=[f"/mnt/nfs_share/{task_name}.py"],
         name=task_name,
         task_id=task_name,
         volumes=[volume_config],
