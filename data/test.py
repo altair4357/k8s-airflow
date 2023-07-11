@@ -1,6 +1,6 @@
 # 2023.07.11 14:30
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from sklearn import datasets
@@ -10,7 +10,6 @@ import joblib
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 
-
 def preprocess_data():
     X, y = datasets.load_boston(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
@@ -18,7 +17,6 @@ def preprocess_data():
     np.save('x_test.npy', X_test)
     np.save('y_train.npy', y_train)
     np.save('y_test.npy', y_test)
-    
 
 def train_model():
     x_train_data = np.load('x_train.npy')
@@ -28,7 +26,6 @@ def train_model():
     model.fit(x_train_data, y_train_data)
 
     joblib.dump(model, 'model.pkl')
-
 
 def test_model():
     x_test_data = np.load('x_test.npy')
@@ -42,10 +39,8 @@ def test_model():
     with open('output.txt', 'a') as f:
         f.write(str(err))
 
-
 def deploy_model():
     print('deploying model...')
-
 
 default_args = {
     'owner': 'airflow',
@@ -89,3 +84,4 @@ t4 = PythonOperator(
 )
 
 t1 >> t2 >> t3 >> t4
+
