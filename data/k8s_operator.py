@@ -21,13 +21,13 @@ dag = DAG(
 )
 
 volume_mount = V1VolumeMount(
-    mount_path='/home/env/airflow/dags_pvc',
+    mount_path='/mnt/nfs_share/',
     name='data-volume',
 )
 
 volume_config = V1Volume(
-    name='data-volume',
-    persistent_volume_claim=V1PersistentVolumeClaimVolumeSource(claim_name='airflow-pvc')
+    name='nfs-pv',
+    persistent_volume_claim=V1PersistentVolumeClaimVolumeSource(claim_name='nfs-pvc')
 )
 
 task_names = ["preprocess_data", "train_model", "test_model", "deploy_model"]
