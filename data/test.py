@@ -1,4 +1,6 @@
-from datetime import timedelta, datetime
+# 2023.07.11 14:30
+
+from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from sklearn import datasets
@@ -58,8 +60,7 @@ dag = DAG(
     'ml_pipeline',
     default_args=default_args,
     description='A simple ML pipeline',
-    schedule_interval=timedelta(days=1),
-    start_date=datetime(2023, 7, 5),
+    schedule_interval=None,
 )
 
 t1 = PythonOperator(
