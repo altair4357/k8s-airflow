@@ -1,6 +1,6 @@
-# 2023.07.11 1100
+# 2023.07.11 14:30
 
-from datetime import timedelta, datetime
+from datetime import timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from kubernetes.client import V1VolumeMount, V1PersistentVolumeClaimVolumeSource, V1Volume
@@ -11,15 +11,14 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)
+    'retry_delay': timedelta(minutes=10)
 }
 
 dag = DAG(
     'k8s_operator',
     default_args=default_args,
     description='A simple ML pipeline',
-    schedule_interval=timedelta(days=1),
-    start_date=datetime(2023, 7, 5),
+    schedule_interval=None,
 )
 
 volume_mount = V1VolumeMount(
@@ -51,7 +50,6 @@ for i, task_name in enumerate(task_names):
         dag=dag,
     )
 
-    
     tasks.append(task)
     
     if i != 0:
