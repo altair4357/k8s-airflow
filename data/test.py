@@ -60,6 +60,7 @@ dag = DAG(
     'ml_pipeline',
     default_args=default_args,
     description='A simple ML pipeline',
+    start_date=datetime(2023, 7, 11, 14, 30),  # 시작 날짜 설정
     schedule_interval=None,
 )
 
