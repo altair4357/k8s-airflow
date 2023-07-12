@@ -1,3 +1,5 @@
+# 2023.07.12 13:30
+
 # 2023.07.11 14:30
 
 from datetime import datetime, timedelta
@@ -18,7 +20,7 @@ dag = DAG(
     'k8s_operator',
     default_args=default_args,
     description='A simple ML pipeline',
-    start_date=datetime(2023, 7, 11, 14, 30),  # 시작 날짜 설정
+    start_date=datetime(2023, 7, 12, 13, 30),  # 시작 날짜 설정
     schedule_interval=None,
 )
 
@@ -28,7 +30,7 @@ volume_mount = V1VolumeMount(
 )
 
 volume_config = V1Volume(
-    name='nfs-pv',
+    name='data-volume',
     persistent_volume_claim=V1PersistentVolumeClaimVolumeSource(claim_name='nfs-pvc')
 )
 
