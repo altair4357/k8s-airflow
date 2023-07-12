@@ -1,6 +1,4 @@
-# 2023.07.12 13:30
-
-# 2023.07.11 14:30
+# 2023.07.12 14:00
 
 from datetime import datetime, timedelta
 from airflow import DAG
@@ -42,7 +40,7 @@ for i, task_name in enumerate(task_names):
         namespace='default',
         image="python:3.8",
         cmds=["python3"],
-        arguments=[f"/mnt/nfs_share/{task_name}.py"],
+        arguments=[f"/mnt/nfs_share/default-nfs-pvc-pvc-504ae414-e42f-4ac6-b8fc-cc51cadf8ccc/{task_name}.py"],
         name=task_name,
         task_id=task_name,
         volumes=[volume_config],
