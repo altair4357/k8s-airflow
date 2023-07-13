@@ -1,12 +1,11 @@
 from datetime import datetime
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
-from airflow.kubernetes.volume import Volume
-from airflow.kubernetes.volume_mount import VolumeMount
+from kubernetes.client.models import V1Volume, V1VolumeMount
 
-volume_mount = VolumeMount('nfs-dags',
+volume_mount = V1VolumeMount(
+                           name='nfs-dags',
                            mount_path='/mnt/nfs_share/default-nfs-pvc-pvc-504ae414-e42f-4ac6-b8fc-cc51cadf8ccc',
-                           sub_path=None,
                            read_only=False)
 
 volume_config= {
@@ -15,7 +14,7 @@ volume_config= {
         'claimName': 'nfs-pvc'
       }
     }
-volume = Volume(name='nfs-dags', configs=volume_config)
+volume = V1Volume(name='nfs-dags', persistent_volume_claim=volume_config['persistentVolumeClaim'])
 
 with DAG('KubernetesPodOperator',
          description='A simple ml workflow',
