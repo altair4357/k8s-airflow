@@ -4,9 +4,10 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import Kubernete
 from kubernetes.client.models import V1Volume, V1VolumeMount
 
 volume_mount = V1VolumeMount(
-                           name='nfs-dags',
-                           mount_path='/mnt/nfs_share/default-nfs-pvc-pvc-504ae414-e42f-4ac6-b8fc-cc51cadf8ccc',
-                           read_only=False)
+    name='nfs-dags',
+    mount_path='/mnt/nfs_share/default-nfs-pvc-pvc-504ae414-e42f-4ac6-b8fc-cc51cadf8ccc',
+    read_only=False
+    )
 
 volume_config= {
     'persistentVolumeClaim':
