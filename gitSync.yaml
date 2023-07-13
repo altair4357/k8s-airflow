@@ -1,0 +1,99 @@
+airflow:
+  # The image to use for the Airflow pods
+  image:
+    repository: apache/airflow
+    tag: 2.5.3-python3.8  # The version of the image
+    pullPolicy: IfNotPresent  # Kubernetes pull policy
+
+  executor: KubernetesExecutor  # The executor to use
+
+  # Airflow configuration options
+  config:
+    AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: "True"  # Whether to delete worker pods
+    AIRFLOW__SCHEDULER_DAG_DIR_LIST_INTERVAL: 180  # How often to list DAGs
+    AIRFLOW__KUBERNETES__DAGS_IN_IMAGE: "False"  # Whether DAGs are baked into the image
+    AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM: nfs-pvc  # The PVC to use for DAGs
+
+  # Pip packages to install on the image
+  # extraPipPackages:
+  #   - "scikit-learn>=0.24"
+  #   - "numpy==1.19.5"
+  #   - "pandas>=1.2.0"
+
+  # Template for the pods
+  kubernetesPodTemplate:
+    # Extra pip packages to install on the pods
+    # extraPipPackages:
+    #   - "scikit-learn>=0.24"
+    #   - "numpy==1.19.5"
+    #   - "pandas>=1.2.0"
+      
+    # Volumes to mount on the pods
+    volumes:
+      - name: nfs-dags  # The name of the volume
+        persistentVolumeClaim:  # Using a PVC
+          claimName: nfs-pvc  # The name of the PVC
+
+workers:
+  enabled: false  # Whether to enable workers
+
+flower:
+  enabled: false  # Whether to enable Flower UI
+
+redis:
+  enabled: false  # Whether to enable Redis
+
+dags:
+  path: /opt/airflow/dags  # The path where DAGs are stored
+
+  # Configuration for syncing DAGs from a git repo
+  gitSync:
+    enabled: true  # Whether to enable git sync
+
+    # The image to use for git sync
+    image: 
+      repository: k8s.gcr.io/git-sync/git-sync
+      tag: v3.2.2
+      pullPolicy: IfNotPresent
+      uid: 65533
+      gid: 65533
+
+    # The git repo to sync from
+    repo: https://github.com/altair4357/k8s-airflow.git
+    branch: master  # The branch to sync from
+    revision: HEAD  # The revision to sync
+    depth: 1  # The depth of the clone
+    syncWait: 60  # How long to wait between syncs
+    syncTimeout: 120  # How long before a sync is considered failed
+    httpSecret: "airflow-secrets"  # Secret for HTTP access
+    httpSecretUsernameKey: "GITHUB_USERNAME"  # Key for HTTP username
+    httpSecretPasswordKey: "GITHUB_TOKEN"  # Key for HTTP password
+
+  # PVC for DAGs
+  persistentVolumeClaim:
+    enabled: true  # Whether to use a PVC
+    existingClaim: true  # Whether the PVC already exists
+    claimName: nfs-pvc  # The name of the PVC
+
+  # Volumes to use
+  volumes:
+    - name: nfs-dags
+      persistentVolumeClaim:
+        claimName: nfs-pvc
+
+  # Persistent storage for DAGs
+  persistence:
+    enabled: false  # Whether to enable persistence
+    existingClaim: nfs-pvc  # The existing PVC to use
+
+  # NFS volumes to use
+  volumes:
+    - name: nfs-dags
+      nfs:
+        server: 172.27.124.173  # The NFS server
+        path: /mnt/nfs_share  # The path on the NFS server
+
+  # Where to mount the volumes
+  volumeMounts:
+    - name: nfs-dags
+      mountPath: /opt/airflow/dags  # Where to mount the volume
