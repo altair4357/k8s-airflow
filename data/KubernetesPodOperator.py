@@ -1,3 +1,5 @@
+# 2023.07.13 1000
+
 from datetime import datetime
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
@@ -5,7 +7,7 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import Kubernete
 with DAG('KubernetesPodOperator',
          description='A simple ml workflow',
          schedule_interval=None,
-         start_date=datetime(2023, 7, 11), catchup=False) as dag:
+         start_date=datetime(2023, 7, 13), catchup=False) as dag:
     
     preprocess_data_task = KubernetesPodOperator(
         task_id='preprocess_data',
