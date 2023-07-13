@@ -14,28 +14,28 @@ with DAG('KubernetesPodOperator',
         name='preprocess_data',
         cmds=['python', '/usr/src/app/preprocess_data.py'],
         namespace='default',
-        image='altair4357/custom-airflow:0.3')
+        image='altair4357/custom-airflow:0.4')
 
     train_model_task = KubernetesPodOperator(
         task_id='train_model',
         name='train_model',
         cmds=['python', '/usr/src/app/train_model.py'],
         namespace='default',
-        image='altair4357/custom-airflow:0.3')
+        image='altair4357/custom-airflow:0.4')
 
     deploy_model_task = KubernetesPodOperator(
         task_id='deploy_model',
         name='deploy_model',
         cmds=['python', '/usr/src/app/deploy_model.py'],
         namespace='default',
-        image='altair4357/custom-airflow:0.3')
+        image='altair4357/custom-airflow:0.4')
 
     test_model_task = KubernetesPodOperator(
         task_id='test_model',
         name='test_model',
         cmds=['python', '/usr/src/app/test_model.py'],
         namespace='default',
-        image='altair4357/custom-airflow:0.3')
+        image='altair4357/custom-airflow:0.4')
 
     # Define task dependencies
     preprocess_data_task >> train_model_task >> deploy_model_task >> test_model_task
