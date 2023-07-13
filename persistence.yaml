@@ -1,0 +1,85 @@
+airflow:
+  image:
+    repository: apache/airflow
+    tag: 2.5.3-python3.8
+    pullPolicy: IfNotPresent
+
+  executor: KubernetesExecutor
+
+  config:
+    AIRFLOW__KUBERNETES__DELETE_WORKER_PODS: "True"
+    AIRFLOW__SCHEDULER_DAG_DIR_LIST_INTERVAL: 180
+    AIRFLOW__KUBERNETES__DAGS_IN_IMAGE: "False"
+    AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM: nfs-pvc
+
+  #extraPipPackages:
+  #  - "scikit-learn>=0.24"
+  #  - "numpy==1.19.5"
+  #  - "pandas>=1.2.0"
+
+  kubernetesPodTemplate:
+    #extraPipPackages:
+    #  - "scikit-learn>=0.24"
+    #  - "numpy==1.19.5"
+    #  - "pandas>=1.2.0"
+      
+    volumes:
+      - name: nfs-dags
+        persistentVolumeClaim:
+          claimName: nfs-pvc
+
+workers:
+  enabled: false
+
+flower:
+  enabled: false
+
+redis:
+  enabled: false
+
+dags:
+  path: /opt/airflow/dags
+
+  gitSync:
+    enabled: false
+
+    image: 
+      repository: k8s.gcr.io/git-sync/git-sync
+      tag: v3.2.2
+      pullPolicy: IfNotPresent
+      uid: 65533
+      gid: 65533
+
+    repo: https://github.com/altair4357/k8s-airflow.git
+    branch: master
+    revision: HEAD
+    depth: 1
+    syncWait: 60
+    syncTimeout: 120
+    httpSecret: "airflow-secrets"
+    httpSecretUsernameKey: "GITHUB_USERNAME"
+    httpSecretPasswordKey: "GITHUB_TOKEN"
+
+  persistentVolumeClaim:
+    enabled: true
+    existingClaim: true
+    claimName: nfs-pvc
+
+  volumes:
+    - name: nfs-dags
+      persistentVolumeClaim:
+        claimName: nfs-pvc
+
+  persistence:
+    enabled: true
+    existingClaim: nfs-pvc
+
+  volumes:
+    - name: nfs-dags
+      nfs:
+        server: <IP>
+        path: /mnt/nfs_share
+
+  volumeMounts:
+    - name: nfs-dags
+      mountPath: /opt/airflow/dags
