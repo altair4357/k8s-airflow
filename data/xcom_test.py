@@ -9,7 +9,7 @@ from pendulum.tz.timezone import Timezone
 kst = Timezone('Asia/Seoul')
 
 default_args = {
-    'owner':'eddie',
+    'owner':'airflow',
     'retries' : 1,
     'retriy_delay':timedelta(minutes=1),
 }
